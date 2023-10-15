@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import Cookies from 'js-cookie';
 import {
   Card,
   Table,
@@ -14,14 +15,21 @@ import {
   TableCell,
   TablePagination
 } from '@mui/material';
+import EditDialog from './dialog';
+import Player from './Player';
 
 export default function Dashboard() {
   const [fileList, setFileList] = React.useState([]);
   const [fileCount, setFileCount] = React.useState(0);
+  const [theText, setTheText] = React.useState('');
+  const [clickedId, setClickedId] = React.useState(0);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [controller, setController] = React.useState({
     page: 0,
     rowsPerPage: 10
   });
+
+  const editRef = React.useRef(null);
 
   React.useEffect(() => {
     getData();
@@ -59,6 +67,14 @@ export default function Dashboard() {
     });
   };
 
+  const handleEditClose = (isSave, updatedText) => {
+    if (isSave) {
+      doUpdate(updatedText);
+    }
+
+    setEditOpen(false);
+  };
+
   const doInsert = () => {
     fetch('/api/insert/', {
       method: 'GET',
@@ -69,6 +85,30 @@ export default function Dashboard() {
     .then(function(myJson) {
       getData();
       alert(myJson["result"]);
+    });
+  }
+
+  const doUpdate = (updatedText) => {
+    fetch(`/api/update/${clickedId}/`, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      },
+      body: JSON.stringify({
+        text: updatedText
+      })
+    })
+    .then(function(response) {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        alert("backend errors")
+      }
+    })
+    .then(function(myJson) {
+      getData();
+      // alert(myJson["result"]);
     });
   }
   
@@ -111,10 +151,17 @@ export default function Dashboard() {
                             <TableCell>
                               {file.id}
                             </TableCell>
-                            <TableCell onClick={()=>{ alert("clicked!") }}>
-                              {file.filename}
-                            </TableCell>
                             <TableCell>
+                              {file.filename}
+                              <Player url={`http://127.0.0.1:8000/media/train/5_3039/${file.filename}`}/>
+                            </TableCell>
+                            <TableCell onClick={()=>{  
+                              console.log(`${file.id} ${file.text}`)
+
+                              setEditOpen(true);
+                              setClickedId(file.id);
+                              editRef.current.setTextFromParent(file.text); 
+                            }}>
                               {file.text}
                             </TableCell>
                             <TableCell>
@@ -137,11 +184,16 @@ export default function Dashboard() {
               </Grid>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Button variant="contained" component="label" onClick={doInsert}>Insert Data</Button>
+                  <Button variant="contained" component="label" onClick={doInsert}>Init Data On Backend</Button>
                 </Paper>
               </Grid>
             </Grid>
           </Container>
+          <EditDialog 
+            ref={editRef}
+            onClose={handleEditClose} 
+            open={editOpen} 
+          />
         </Box>
       </Box>
   );

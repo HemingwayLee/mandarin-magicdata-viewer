@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from myapp import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/show/page/<int:page>/size/<int:size>/', views.display),
     path('api/insert/', views.insert),
-]
+    path('api/update/<int:id>/', views.update),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
