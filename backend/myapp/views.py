@@ -1,20 +1,22 @@
+import os
 import uuid
 import random
 import decimal
 from time import sleep
 from django.http import JsonResponse
 from django.db import connection
-from .models import Person
+from django.conf import settings
+from .models import Files
 
+folder_path = f'{settings.MEDIA_ROOT}/train/5_3039/'
 def insert(request):
-    for i in range(random.randint(10, 50)):
-        sleep(decimal.Decimal(random.randrange(50, 300))/1000)
-
-        p = Person(
-            fname=uuid.uuid4().hex[:16], 
-            lname=uuid.uuid4().hex[:16], 
-            age=random.randint(10, 60))
-        p.save()
+    for file in os.listdir(folder_path):
+        if file.endswith(".wav"):
+            # print(os.path.join(folder_path, file))
+            obj, created = Files.objects.get_or_create(
+                filename=file,
+                text=''
+            )
 
     return JsonResponse({"result": "created!"})
 
@@ -22,17 +24,17 @@ def insert(request):
 def display(request, page, size):
     limit = size
     offset = page*size
-    person = Person.objects.order_by("id")[offset:offset+limit]
-    if person.exists():
+    files = Files.objects.order_by("id")[offset:offset+limit]
+    if files.exists():
         res = []
-        for val in person.values("id", "fname", "lname", "age"):
+        for val in files.values("id", "filename", "text", "created_at"):
             res.append({
                 "id": val["id"],
-                "fname": val["fname"],
-                "lname": val["lname"],
-                "age": val["age"]
+                "filename": val["filename"],
+                "text": val["text"],
+                "created_at": val["created_at"]
             })
 
-        return JsonResponse({"total": Person.objects.count(), "data": res}) 
+        return JsonResponse({"total": Files.objects.count(), "data": res}) 
     else:
-        return JsonResponse({"total": Person.objects.count()})
+        return JsonResponse({"total": 0, "data": []})

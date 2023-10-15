@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 
 export default function Dashboard() {
-  const [personList, setPersonList] = React.useState([]);
-  const [personCount, setPersonCount] = React.useState(0);
+  const [fileList, setFileList] = React.useState([]);
+  const [fileCount, setFileCount] = React.useState(0);
   const [controller, setController] = React.useState({
     page: 0,
     rowsPerPage: 10
@@ -34,8 +34,8 @@ export default function Dashboard() {
       if (response.statusText === 'OK') {
         const data = await response.json();
         console.log(data);
-        setPersonList(data.data);
-        setPersonCount(data.total);
+        setFileList(data.data);
+        setFileCount(data.total);
       } else {
         throw new Error('Request failed')
       }
@@ -95,30 +95,30 @@ export default function Dashboard() {
                             Id
                           </TableCell>
                           <TableCell>
-                            First Name
+                            Filename
                           </TableCell>
                           <TableCell>
-                            Last Name
+                            Text
                           </TableCell>
                           <TableCell>
-                            Age
+                            Create At
                           </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {personList.map((person) => (
-                          <TableRow key={person.id}>
+                        {fileList.map((file) => (
+                          <TableRow key={file.id}>
                             <TableCell>
-                              {person.id}
+                              {file.id}
+                            </TableCell>
+                            <TableCell onClick={()=>{ alert("clicked!") }}>
+                              {file.filename}
                             </TableCell>
                             <TableCell>
-                              {person.fname}
+                              {file.text}
                             </TableCell>
                             <TableCell>
-                              {person.lname}
-                            </TableCell>
-                            <TableCell>
-                              {person.age}
+                              {file.created_at}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -128,7 +128,7 @@ export default function Dashboard() {
                       component="div"
                       onPageChange={handlePageChange}
                       page={controller.page}
-                      count={personCount}
+                      count={fileCount}
                       rowsPerPage={controller.rowsPerPage}
                       onRowsPerPageChange={handleChangeRowsPerPage}
                     />
