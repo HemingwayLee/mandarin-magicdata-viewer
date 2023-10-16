@@ -3,6 +3,7 @@ import uuid
 import json
 import random
 import decimal
+import csv
 from time import sleep
 from django.http import JsonResponse
 from django.db import connection
@@ -53,3 +54,14 @@ def update(request, id):
     Files.objects.filter(pk=id).update(text=body["text"])
 
     return JsonResponse({"result": "updated!"})
+
+
+@require_http_methods(["GET"])
+def save_labels(request):
+    files = Files.objects.all()
+    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'w', encoding='utf8') as csvfile:
+        datawriter = csv.writer(csvfile, delimiter='\t')
+        for val in files.values("filename", "text"):
+            datawriter.writerow([val["filename"], "5_3039", val["text"]])
+
+    return JsonResponse({"result": "saved!"})

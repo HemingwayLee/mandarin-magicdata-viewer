@@ -22,5 +22,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('api/show/page/<int:page>/size/<int:size>/', views.display),
     path('api/insert/', views.insert),
+    path('api/save/labels/', views.save_labels),
     path('api/update/<int:id>/', views.update),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

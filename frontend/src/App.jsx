@@ -88,6 +88,18 @@ export default function Dashboard() {
     });
   }
 
+  const doSave = () => {
+    fetch('/api/save/labels/', {
+      method: 'GET',
+    })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(myJson) {
+      alert("saved");
+    });
+  }
+
   const doUpdate = (updatedText) => {
     fetch(`/api/update/${clickedId}/`, {
       method: 'POST',
@@ -185,6 +197,7 @@ export default function Dashboard() {
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Button variant="contained" component="label" onClick={doInsert}>Init Data On Backend</Button>
+                  <Button variant="contained" component="label" onClick={doSave}>Save all labels</Button>
                 </Paper>
               </Grid>
             </Grid>
