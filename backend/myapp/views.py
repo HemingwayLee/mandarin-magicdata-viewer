@@ -15,12 +15,20 @@ from .models import Files
 folder_path = f'{settings.MEDIA_ROOT}/train/5_3039/'
 @require_http_methods(["GET"])
 def insert(request):
+    labels = {}
+    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'r', encoding='utf8') as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
+        rows = list(reader)
+        for row in rows:
+            labels[row[0]] = row[2]
+
     for file in os.listdir(folder_path):
         if file.endswith(".wav"):
-            # print(os.path.join(folder_path, file))
+            wordings = labels[file] if file in labels else ''
+            
             obj, created = Files.objects.get_or_create(
                 filename=file,
-                text=''
+                text=wordings
             )
 
     return JsonResponse({"result": "created!"})
