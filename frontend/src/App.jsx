@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import EditDialog from './dialog';
 import Player from './Player';
+import MyHeatmap from './heatmap';
 
 export default function Dashboard() {
   const [fileList, setFileList] = React.useState([]);
@@ -198,6 +199,7 @@ export default function Dashboard() {
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Button variant="contained" component="label" onClick={doInsert}>Init Data On Backend</Button>
                   <Button variant="contained" component="label" onClick={doSave}>Save all labels</Button>
+                  <MyHeatmap />
                 </Paper>
               </Grid>
             </Grid>
