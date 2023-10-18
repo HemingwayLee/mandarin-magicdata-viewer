@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('api/show/page/<int:page>/size/<int:size>/', views.display),
-    path('api/insert/', views.insert),
+    path('api/insert/', views.init_csv2db),
     path('api/save/labels/', views.save_labels),
     path('api/update/<int:id>/', views.update),
+    path('api/freq/word/', views.get_word_count_rank),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

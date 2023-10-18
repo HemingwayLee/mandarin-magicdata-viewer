@@ -11,10 +11,10 @@ from django.views.decorators.http import require_http_methods
 from django.conf import settings
 from .models import Files
 
-
+counter = {}
 folder_path = f'{settings.MEDIA_ROOT}/train/5_3039/'
 @require_http_methods(["GET"])
-def insert(request):
+def init_csv2db(request):
     labels = {}
     with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'r', encoding='utf8') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
@@ -25,13 +25,37 @@ def insert(request):
     for file in os.listdir(folder_path):
         if file.endswith(".wav"):
             wordings = labels[file] if file in labels else ''
+            for char in wordings:
+                if char in counter:
+                    counter[char] += 1
+                else:
+                    counter[char] = 1
             
             obj, created = Files.objects.get_or_create(
                 filename=file,
                 text=wordings
             )
 
+    print(counter)
+
     return JsonResponse({"result": "created!"})
+
+
+@require_http_methods(["GET"])
+def get_word_count_rank(request):
+    out = []
+    with open(f'{settings.MEDIA_ROOT}/hanziDB.csv', 'r', encoding='utf8') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        rows = list(reader)
+        for row in rows:
+            out.append({
+                "rank": row[0],
+                "char": row[1],
+                "freq": counter[row[1]]
+            })
+
+    return JsonResponse({"result": out})
+
 
 @require_http_methods(["GET"])
 def display(request, page, size):
