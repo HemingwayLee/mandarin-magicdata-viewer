@@ -6,22 +6,20 @@ var options = {
     height: 350,
     type: "heatmap"
   },
-  plotOptions: {
-    heatmap: {
-      colorScale: {
-        ranges: [
-          {
-            from: -1,
-            to: 0,
-            color: "#4caf50",
-            name: "low"
-          }
-        ]
-      }
-    }
-  },
+  colors: ["#008FFB"],
   dataLabels: {
-    enabled: false
+    position: 'top',
+    style: {
+      fontSize: '14px',
+      fontFamily: 'Helvetica, Arial, sans-serif',
+      fontWeight: 'bold',
+      colors: undefined
+    },
+    formatter: function(value, { seriesIndex, dataPointIndex, w }) {
+      console.log(`seriesIndex: ${seriesIndex}`);
+      console.log(`dataPointIndex: ${dataPointIndex}`);
+      return value;
+    }
   },
   title: {
     text: "HeatMap Chart Characters"
@@ -30,7 +28,7 @@ var options = {
 
 var series = [
   {
-    name: "Fri",
+    name: "",
     data: formatData([
       0,
       0,
@@ -59,7 +57,7 @@ var series = [
     ])
   },
   {
-    name: "Thu",
+    name: "",
     data: formatData([
       0,
       0,
@@ -88,7 +86,7 @@ var series = [
     ])
   },
   {
-    name: "Wed",
+    name: "",
     data: formatData([
       0,
       0,
@@ -117,7 +115,7 @@ var series = [
     ])
   },
   {
-    name: "Tue",
+    name: "",
     data: formatData([
       0,
       0,
@@ -146,7 +144,7 @@ var series = [
     ])
   },
   {
-    name: "Mon",
+    name: "",
     data: formatData([
       0,
       4,
@@ -179,30 +177,26 @@ var series = [
 function formatData(data) {
   let newData = [];
   let categories = [
-    "7:00-7.30",
-    "7:30-8.00",
-    "8:00-8.30",
-    "8:30-9.00",
-    "9:00-9.30",
-    "9:30-10.00",
-    "10:00-10.30",
-    "10:30-11.00",
-    "11:00-11.30",
-    "11:30-12.00",
-    "12:00-12.30",
-    "12:30-1.00",
-    "1:00-1.30",
-    "1.30-2.00",
-    "2:00-2.30",
-    "2:30-3.00",
-    "3:00-3.30",
-    "3:30-4.00",
-    "4:00-4.30",
-    "4:30-5.00",
-    "5:00-5.30",
-    "5:30-6.00",
-    "6:00-6.30",
-    "6:30-7.00"
+    "1",
+    "6",
+    "11",
+    "16",
+    "21",
+    "26",
+    "31",
+    "36",
+    "41",
+    "46",
+    "51",
+    "56",
+    "61",
+    "66",
+    "71",
+    "76",
+    "81",
+    "86",
+    "91",
+    "96"
   ];
 
   for (var i = 0; i < categories.length; i++) {
