@@ -55,21 +55,22 @@ def init_csv2db(request):
 
 
 @require_http_methods(["GET"])
-def get_word_count_rank(request):
+def get_word_count_rank(request, page):
     counter = _get_word_counter()
     out = []
     with open(f'{settings.MEDIA_ROOT}/hanziDB.csv', 'r', encoding='utf8') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         rows = list(reader)
         for idx, row in enumerate(rows):
-            if idx == 0 or idx > 101:
+            if idx == 0 or idx > (page*100 + 1):
                 continue
 
-            out.append({
-                "rank": row[0],
-                "char": row[1],
-                "freq": counter[row[1]] if row[1] in counter else 0
-            })
+            if idx > (page-1)*100:
+                out.append({
+                    "rank": row[0],
+                    "char": row[1],
+                    "freq": counter[row[1]] if row[1] in counter else 0
+                })
 
     return JsonResponse({"result": out})
 

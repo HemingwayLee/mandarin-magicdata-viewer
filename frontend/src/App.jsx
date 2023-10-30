@@ -30,7 +30,7 @@ export default function Dashboard() {
     page: 0,
     rowsPerPage: 10
   });
-
+  const buttons = [1, 2, 3, 4, 5, 7, 8, 9, 10];
   const editRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -126,8 +126,10 @@ export default function Dashboard() {
     });
   }
 
-  const getFreqWords = () => {
-    fetch('api/freq/word/', {
+  const getFreqWords = (page) => {
+    console.log(page);
+
+    fetch(`api/freq/word/${page}/`, {
       method: 'GET',
     })
     .then(function(response) {
@@ -213,11 +215,18 @@ export default function Dashboard() {
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Button variant="contained" component="label" onClick={doInsert}>Init database from TRANS.txt</Button>
                   <Button variant="contained" component="label" onClick={doSave}>Save all labels to TRANS.txt file</Button>
-                  <Button variant="contained" component="label" onClick={getFreqWords}>Get words' frequency</Button>
+                  {/* <Button variant="contained" component="label" onClick={getFreqWords}>Get words' frequency</Button> */}
                 </Paper>
               </Grid>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, overflowX: "auto", overflowY: "hidden" }}>
+                  <div style={{textAlign: "center"}}>
+                  {
+                    buttons.map(btn => {
+                      return (<Button onClick={()=>{getFreqWords(btn)}}>{btn}</Button>)
+                    })
+                  }
+                  </div>
                   <BarChart width={2200} height={300} data={freqData}>
                     <Bar dataKey="freq" fill="green" />
                     <CartesianGrid stroke="#ccc" />
