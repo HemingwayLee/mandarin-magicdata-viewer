@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [fileList, setFileList] = React.useState([]);
   const [fileCount, setFileCount] = React.useState(0);
   const [theText, setTheText] = React.useState('');
+  const [freqData, setFreqData] = React.useState([]);
   const [clickedId, setClickedId] = React.useState(0);
   const [editOpen, setEditOpen] = React.useState(false);
   const [controller, setController] = React.useState({
@@ -133,17 +134,10 @@ export default function Dashboard() {
       return response.json();
     })
     .then(function(myJson) {
-      console.log(myJson)
+      console.log(myJson["result"])
+      setFreqData(myJson["result"])
     });
   }
-
-
-  const data = [
-    { name: 'Geeksforgeeks', students: 400 },
-    { name: 'Technical scripter', students: 700 },
-    { name: 'Geek-i-knack', students: 200 },
-    { name: 'Geek-o-mania', students: 1000 }
-  ];
   
   return (
       <Box sx={{ display: 'flex' }}>
@@ -224,10 +218,10 @@ export default function Dashboard() {
               </Grid>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, overflowX: "auto", overflowY: "hidden" }}>
-                  <BarChart width={1800} height={300} data={data}>
-                    <Bar dataKey="students" fill="green" />
+                  <BarChart width={2200} height={300} data={freqData}>
+                    <Bar dataKey="freq" fill="green" />
                     <CartesianGrid stroke="#ccc" />
-                    <XAxis dataKey="name" />
+                    <XAxis dataKey="char" />
                     <YAxis />
                   </BarChart>
                 </Paper>
