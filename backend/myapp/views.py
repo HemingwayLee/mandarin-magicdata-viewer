@@ -11,8 +11,29 @@ from django.views.decorators.http import require_http_methods
 from django.conf import settings
 from .models import Files
 
-counter = {}
 folder_path = f'{settings.MEDIA_ROOT}/train/5_3039/'
+
+def _get_word_counter():
+    labels = {}
+    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'r', encoding='utf8') as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
+        rows = list(reader)
+        for row in rows:
+            labels[row[0]] = row[2]
+
+    counter = {}
+    for file in os.listdir(folder_path):
+        if file.endswith(".wav"):
+            wordings = labels[file] if file in labels else ''
+            for char in wordings:
+                if char in counter:
+                    counter[char] += 1
+                else:
+                    counter[char] = 1
+
+    return counter
+
+
 @require_http_methods(["GET"])
 def init_csv2db(request):
     labels = {}
@@ -25,33 +46,29 @@ def init_csv2db(request):
     for file in os.listdir(folder_path):
         if file.endswith(".wav"):
             wordings = labels[file] if file in labels else ''
-            for char in wordings:
-                if char in counter:
-                    counter[char] += 1
-                else:
-                    counter[char] = 1
-            
             obj, created = Files.objects.get_or_create(
                 filename=file,
                 text=wordings
             )
-
-    print(counter)
 
     return JsonResponse({"result": "created!"})
 
 
 @require_http_methods(["GET"])
 def get_word_count_rank(request):
+    counter = _get_word_counter()
     out = []
     with open(f'{settings.MEDIA_ROOT}/hanziDB.csv', 'r', encoding='utf8') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         rows = list(reader)
-        for row in rows:
+        for idx, row in enumerate(rows):
+            if idx == 0 or idx > 101:
+                continue
+
             out.append({
                 "rank": row[0],
                 "char": row[1],
-                "freq": counter[row[1]]
+                "freq": counter[row[1]] if row[1] in counter else 0
             })
 
     return JsonResponse({"result": out})
@@ -97,3 +114,6 @@ def save_labels(request):
             datawriter.writerow([val["filename"], "5_3039", val["text"]])
 
     return JsonResponse({"result": "saved!"})
+
+
+

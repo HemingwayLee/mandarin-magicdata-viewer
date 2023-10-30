@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
 import Cookies from 'js-cookie';
 import {
   Card,
@@ -17,7 +18,6 @@ import {
 } from '@mui/material';
 import EditDialog from './dialog';
 import Player from './Player';
-import MyHeatmap from './heatmap';
 
 export default function Dashboard() {
   const [fileList, setFileList] = React.useState([]);
@@ -124,6 +124,26 @@ export default function Dashboard() {
       // alert(myJson["result"]);
     });
   }
+
+  const getFreqWords = () => {
+    fetch('api/freq/word/', {
+      method: 'GET',
+    })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(myJson) {
+      console.log(myJson)
+    });
+  }
+
+
+  const data = [
+    { name: 'Geeksforgeeks', students: 400 },
+    { name: 'Technical scripter', students: 700 },
+    { name: 'Geek-i-knack', students: 200 },
+    { name: 'Geek-o-mania', students: 1000 }
+  ];
   
   return (
       <Box sx={{ display: 'flex' }}>
@@ -197,9 +217,19 @@ export default function Dashboard() {
               </Grid>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Button variant="contained" component="label" onClick={doInsert}>Init Data On Backend</Button>
-                  <Button variant="contained" component="label" onClick={doSave}>Save all labels</Button>
-                  <MyHeatmap />
+                  <Button variant="contained" component="label" onClick={doInsert}>Init database from TRANS.txt</Button>
+                  <Button variant="contained" component="label" onClick={doSave}>Save all labels to TRANS.txt file</Button>
+                  <Button variant="contained" component="label" onClick={getFreqWords}>Get words' frequency</Button>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, overflowX: "auto", overflowY: "hidden" }}>
+                  <BarChart width={1800} height={300} data={data}>
+                    <Bar dataKey="students" fill="green" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                  </BarChart>
                 </Paper>
               </Grid>
             </Grid>
