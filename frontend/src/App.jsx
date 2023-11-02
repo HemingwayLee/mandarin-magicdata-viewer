@@ -182,7 +182,7 @@ export default function Dashboard() {
                             </TableCell>
                             <TableCell>
                               {file.filename}
-                              <Player url={`http://127.0.0.1:8000/media/train/5_3039/${file.filename}`}/>
+                              <Player url={`http://${window.location.hostname}:8000/media/train/5_3039/${file.filename}`}/>
                             </TableCell>
                             <TableCell onClick={()=>{  
                               console.log(`${file.id} ${file.text}`)
