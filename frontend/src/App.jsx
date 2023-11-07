@@ -30,7 +30,7 @@ export default function Dashboard() {
     page: 0,
     rowsPerPage: 10
   });
-  const buttons = [1, 2, 3, 4, 5, 7, 8, 9, 10];
+  const buttons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const editRef = React.useRef(null);
 
   React.useEffect(() => {

@@ -28,7 +28,7 @@ const EditDialog = React.forwardRef((props, ref) => {
   }
 
   return (
-    <Dialog onClose={() => { handleClose(false); }} open={open}>
+    <Dialog maxWidth="md" fullWidth={true} onClose={() => { handleClose(false); }} open={open}>
       <DialogTitle>{"Edit"}</DialogTitle>
       <TextField
         multiline
