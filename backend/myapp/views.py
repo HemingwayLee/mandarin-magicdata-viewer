@@ -34,6 +34,21 @@ def _get_word_counter():
     return counter
 
 
+def _delete_all_wav_which_not_texted_in_db():
+    files = Files.objects.all()
+    for val in files.values("filename", "text"):
+        if val["text"] == "":
+            os.remove(f"{folder_path}{val['filename']}")
+
+
+def _save_all_labels_from_db_2_txt():
+    files = Files.objects.all()
+    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'w', encoding='utf8') as csvfile:
+        datawriter = csv.writer(csvfile, delimiter='\t')
+        for val in files.values("filename", "text"):
+            datawriter.writerow([val["filename"], "5_3039", val["text"]])
+
+
 @require_http_methods(["GET"])
 def init_csv2db(request):
     labels = {}
@@ -108,13 +123,17 @@ def update(request, id):
 
 @require_http_methods(["GET"])
 def save_labels(request):
-    files = Files.objects.all()
-    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'w', encoding='utf8') as csvfile:
-        datawriter = csv.writer(csvfile, delimiter='\t')
-        for val in files.values("filename", "text"):
-            datawriter.writerow([val["filename"], "5_3039", val["text"]])
+    _save_all_labels_from_db_2_txt()
 
     return JsonResponse({"result": "saved!"})
 
 
+@require_http_methods(["GET"])
+def clean_files_and_db(request):
+    _delete_all_wav_which_not_texted_in_db()
 
+    Files.objects.filter(text="").delete()
+
+    _save_all_labels_from_db_2_txt()
+
+    return JsonResponse({"result": "cleaned!"})
