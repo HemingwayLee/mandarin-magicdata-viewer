@@ -137,3 +137,4 @@ def clean_files_and_db(request):
     _save_all_labels_from_db_2_txt()
 
     return JsonResponse({"result": "cleaned!"})
+

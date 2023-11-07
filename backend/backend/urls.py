@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/insert/', views.init_csv2db),
     path('api/save/labels/', views.save_labels),
     path('api/update/<int:id>/', views.update),
+    path('api/cleanup/', views.clean_files_and_db),
     path('api/freq/word/<int:page>/', views.get_word_count_rank),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -102,6 +102,18 @@ export default function Dashboard() {
     });
   }
 
+  const doCleanup = () => {
+    fetch('/api/cleanup/', {
+      method: 'GET',
+    })
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(myJson) {
+      alert("clean up already");
+    });
+  }
+
   const doUpdate = (updatedText) => {
     fetch(`/api/update/${clickedId}/`, {
       method: 'POST',
@@ -214,8 +226,8 @@ export default function Dashboard() {
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Button variant="contained" component="label" onClick={doInsert}>Init database from TRANS.txt</Button>
-                  <Button variant="contained" component="label" onClick={doSave}>Save all labels to TRANS.txt file</Button>
-                  {/* <Button variant="contained" component="label" onClick={getFreqWords}>Get words' frequency</Button> */}
+                  <Button variant="contained" component="label" onClick={doSave}>Save all labels from database to TRANS.txt file</Button>
+                  <Button variant="contained" component="label" onClick={doCleanup}>Cleanup database and wav files without text</Button>
                 </Paper>
               </Grid>
               <Grid item xs={12}>
