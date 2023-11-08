@@ -43,8 +43,7 @@ def _delete_all_wav_which_not_texted_in_db():
 
 def _save_all_labels_from_db_2_txt():
     files = Files.objects.all()
-    # Add 'b' to avoid ^M char in the end of each line
-    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'wb', encoding='utf8') as csvfile:
+    with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'w', encoding='utf8', newline="\n") as csvfile:
         datawriter = csv.writer(csvfile, delimiter='\t')
         for val in files.values("filename", "text"):
             datawriter.writerow([val["filename"], "5_3039", val["text"]])
