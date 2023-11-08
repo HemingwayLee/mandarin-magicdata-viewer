@@ -10,6 +10,9 @@ from django.db import connection
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 from .models import Files
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 folder_path = f'{settings.MEDIA_ROOT}/train/5_3039/'
 
@@ -110,6 +113,7 @@ def display(request, page, size):
         return JsonResponse({"total": 0, "data": []})
 
 
+@csrf_exempt
 @require_http_methods(["POST"])
 def update(request, id):
     print(id)
