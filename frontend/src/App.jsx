@@ -226,7 +226,7 @@ export default function Dashboard() {
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Button variant="contained" component="label" onClick={doInsert}>Init database from TRANS.txt</Button>
-                  <Button variant="contained" component="label" onClick={doSave}>Save all labels from database to TRANS.txt file</Button>
+                  <Button variant="contained" component="label" onClick={doSave}>Save all labels from database to TRANS.txt and slicer.list file</Button>
                   <Button variant="contained" component="label" onClick={doCleanup}>Cleanup database and wav files without text</Button>
                 </Paper>
               </Grid>

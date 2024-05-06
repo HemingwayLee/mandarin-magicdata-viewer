@@ -27,15 +27,28 @@ const EditDialog = React.forwardRef((props, ref) => {
     setCurrText(converter(e.target.value));
   }
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleClose(true);
+    }
+  }
+
   return (
     <Dialog maxWidth="md" fullWidth={true} onClose={() => { handleClose(false); }} open={open}>
       <DialogTitle>{"Edit"}</DialogTitle>
       <TextField
-        multiline
+        inputRef={(input) => input && input.focus()}
+        onFocus={(e) =>
+          e.currentTarget.setSelectionRange(
+          e.currentTarget.value.length,
+          e.currentTarget.value.length
+        )}
+        // multiline
         rows={2}
         maxRows={4}
         value={currText}
         onChange={(e) => {onTextAreaChange(e)}}
+        onKeyPress={handleKeyPress}
       />
       <Button variant="contained" component="label" onClick={() => {handleClose(true);}}>Confirm</Button>
     </Dialog>

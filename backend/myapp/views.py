@@ -46,10 +46,19 @@ def _delete_all_wav_which_not_texted_in_db():
 
 def _save_all_labels_from_db_2_txt():
     files = Files.objects.all()
+    
+    # Magic data format
     with open(f'{settings.MEDIA_ROOT}/train/TRANS.txt', 'w', encoding='utf8', newline="\n") as csvfile:
         datawriter = csv.writer(csvfile, delimiter='\t')
         for val in files.values("filename", "text"):
             datawriter.writerow([val["filename"], "5_3039", val["text"]])
+
+    # GPT-SoVITS format
+    with open(f'{settings.MEDIA_ROOT}/slicer.list', 'w', encoding='utf8', newline="\n") as csvfile:
+        datawriter = csv.writer(csvfile, delimiter='|')
+        for val in files.values("filename", "text"):
+            datawriter.writerow([f'output/slicer/{val["filename"]}', "slicer", "ZH", val["text"]])
+
 
 
 @require_http_methods(["GET"])
