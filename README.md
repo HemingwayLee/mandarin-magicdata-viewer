@@ -1,4 +1,4 @@
-# mandarin-magicdata-viewer
+# mandarin-tts-editor
 * proxy need to be set in `setupProxy.js` 
 * `concurrently` need to be installed in order to run both backend and frontend
 * Auto reload feature is there
